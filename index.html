@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sharing Online - Tech Insights</title>
+    <!-- Updated fonts for a tech/history aesthetic -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Sleek Tech Theme */
+            --bg-dark: #0f172a;
+            --panel-bg: #1e293b;
+            --neon-blue: #38bdf8; 
+            --neon-purple: #818cf8; 
+            --neon-pink: #c084fc; 
+            --neon-green: #4ade80; 
+            --neon-red: #f87171;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --radius-lg: 8px; 
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+            background-image: 
+              radial-gradient(circle at 15% 40%, rgba(56, 189, 248, 0.05), transparent 30%),
+              radial-gradient(circle at 85% 60%, rgba(129, 140, 248, 0.05), transparent 30%);
+        }
+
+        #particles {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .header-banner {
+            background-color: rgba(15, 23, 42, 0.95);
+            border-bottom: 2px solid var(--neon-blue);
+            padding: 15px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+            z-index: 10;
+        }
+
+        .header-banner h1 {
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #fff;
+            text-shadow: 0 0 5px var(--neon-blue);
+        }
+
+        .stats {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--neon-blue);
+        }
+
+        #app-container {
+            max-width: 900px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .level-card {
+            background: var(--panel-bg);
+            border: 1px solid #334155;
+            border-radius: var(--radius-lg);
+            padding: 2.2rem 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.35s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .level-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--neon-blue);
+            box-shadow: 0 5px 20px rgba(56, 189, 248, 0.15);
+        }
+
+        .level-card h2, .level-card h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--text-main);
+            margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .level-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 2px;
+            border: 1px solid #334155;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .action-btn {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            padding: 14px;
+            background: transparent;
+            border: 1px solid var(--text-main);
+            border-radius: 4px;
+            cursor: pointer;
+            text-transform: uppercase;
+            color: var(--text-main);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .action-btn:hover:not(:disabled) {
+            background: var(--text-main);
+            color: var(--bg-dark);
+            border-color: var(--text-main);
+            transform: translateY(-2px);
+        }
+
+        .btn-correct { background-color: rgba(74, 222, 128, 0.2) !important; border-color: var(--neon-green) !important; color: var(--neon-green) !important; }
+        .btn-wrong { background-color: rgba(248, 113, 113, 0.2) !important; border-color: var(--neon-red) !important; color: var(--neon-red) !important; }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 2rem;
+        }
+
+        .reading-container {
+            background: var(--panel-bg);
+            padding: 2.2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid #334155;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .reading-container h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--neon-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .word-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            padding: 1.2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid #334155;
+        }
+
+        .cloud-word {
+            background: var(--bg-dark);
+            color: var(--text-main);
+            padding: 6px 14px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            border: 1px solid #475569;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .cloud-word.found {
+            background: rgba(56, 189, 248, 0.2);
+            color: var(--neon-blue);
+            border-color: var(--neon-blue);
+            text-decoration: line-through;
+        }
+
+        .interactive-word {
+            cursor: pointer;
+            padding: 0 2px;
+            border-bottom: 1px dotted #888;
+            transition: color 0.2s;
+        }
+
+        .interactive-word.revealed {
+            color: var(--neon-blue);
+            font-weight: bold;
+            border-bottom: none;
+        }
+
+        hr { border: 0; height: 1px; background: #334155; margin: 1.8rem 0; }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            border: 1px solid #475569;
+            background: var(--bg-dark);
+            color: var(--text-main);
+            margin-top: 1rem;
+            text-align: center;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+        }
+
+        .flashcard-scene {
+            width: 100%;
+            height: 360px;
+            perspective: 1000px;
+            margin: 1.8rem 0;
+        }
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+        .flashcard.is-flipped { transform: rotateY(180deg); }
+        .flashcard-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: var(--panel-bg);
+            border: 1px solid #334155;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: var(--text-main);
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .flashcard-back {
+            transform: rotateY(180deg);
+            background: var(--bg-dark);
+            border-color: var(--neon-blue);
+            justify-content: flex-start;
+            overflow-y: auto;
+        }
+
+        .flashcard-examples {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            color: var(--text-main);
+            text-align: left;
+            width: 100%;
+            border-top: 1px solid #334155;
+            padding-top: 15px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .example-en { color: var(--neon-blue); font-weight: bold; }
+        .example-zh { color: var(--text-muted); font-size: 0.95rem; }
+
+        .sentence-dropzone, .word-bank {
+            min-height: 80px;
+            border: 1px dashed #475569;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            background: var(--bg-dark);
+        }
+        .draggable-word {
+            padding: 10px 14px;
+            background: var(--panel-bg);
+            border: 1px solid #334155;
+            color: var(--text-main);
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: bold;
+            transition: transform 0.1s;
+            user-select: none;
+        }
+        .draggable-word:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .ai-logo-frame {
+            width: 180px;
+            height: 180px;
+            object-fit: contain;
+            background: #ffffff;
+            padding: 15px;
+            border: 1px solid #334155;
+            margin: 0 auto 1.5rem auto;
+            display: block;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.98); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop { animation: popIn 0.4s ease-out forwards; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+        .shake { animation: shake 0.3s ease-in-out; }
+    </style>
+</head>
+<body>
+    <canvas id="particles"></canvas>
+    
+    <header class="header-banner">
+        <h1>Network Insights // Sharing Online</h1>
+        <div class="stats">
+            <span id="xp-counter">✨ 0 Tech Points</span>
+        </div>
+    </header>
+    
+    <main id="app-container"></main>
+
+    <script>
+        function initParticles() {
+            const canvas = document.getElementById('particles');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particlesArray = [];
+            const colors = ['#38bdf8', '#818cf8', '#cbd5e1'];
+
+            for (let i = 0; i < 40; i++) {
+                particlesArray.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 1.5 + 0.5,
+                    speedY: Math.random() * 0.5 - 0.25,
+                    speedX: Math.random() * 0.5 - 0.25,
+                    color: colors[Math.floor(Math.random() * colors.length)]
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < particlesArray.length; i++) {
+                    let p = particlesArray[i];
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+
+                    if (p.x < 0) p.x = canvas.width;
+                    if (p.x > canvas.width) p.x = 0;
+                    if (p.y < 0) p.y = canvas.height;
+                    if (p.y > canvas.height) p.y = 0;
+                }
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+        window.addEventListener('resize', () => {
+            const canvas = document.getElementById('particles');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        const spaceDB = [
+            { name: "Bulletin Board System", category: "Early Text Forums", img: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=200&q=80" },
+            { name: "Social Media Platform", category: "Web 2.0", img: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&q=80" },
+            { name: "Live Streaming", category: "Modern Entertainment", img: "https://images.unsplash.com/photo-1560169897-fc0cdbdfa4d5?w=200&q=80" },
+            { name: "Short Video App", category: "Content Discovery", img: "https://images.unsplash.com/photo-1611605698335-8b1569810432?w=200&q=80" }
+        ];
+
+        const ALL_MISSIONS = [
+            "Bulletin Board System", "Social Media Platform", "Live Streaming", "Short Video App", 
+            "Email Client", "Search Engine", "Web Browser", "Online Multiplayer"
+        ];
+
+        const spaceAppsDB = [
+            { name: "Email", emoji: "📧✉️💻" },
+            { name: "Live Stream", emoji: "🔴📹💬" },
+            { name: "Anonymity", emoji: "🎭🤫👤" },
+            { name: "Global Network", emoji: "🌐🔗🌍" },
+        ];
+
+        const ALL_SPACE_APPS = [
+            "Email", "Live Stream", "Anonymity", "Global Network",
+            "Photography", "Gaming", "Text Messaging"
+        ];
+
+        const courseData = {
+          levels: [
+            {
+              id: "basic",
+              title: "Unit 4: Sharing Online - Basic",
+              description: "Explore the early Internet, BBS culture in Taiwan, and the rise of modern social media.",
+              image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80",
+              reading: [
+                { section: "The Early Internet", text: "People have used the Internet to share information since it began. At first, it was mostly for scientists and the military. But it did not take long before people started using it for less serious things. They wanted to chat, share interests, and talk about their lives. After all, we are social animals. In 1969, only a small number of people in the USA could use what would become 'the Internet.' Many worked with the U.S. Department of Defense, which helps protect the country. Scientists and researchers who worked with them could also use it. Later, some of the top universities were connected too. Scientists could now send messages to each other more easily than before. Soon, they were talking about hobbies, such as their favorite science-fiction books, not just work. Early e-mail used the 'at symbol' (@) to send messages. People also used Bulletin Board Systems (BBSes), where they could leave messages for anyone who wanted to read them. People were already using the Internet to make communities." },
+                { section: "BBS and PTT in Taiwan", text: "BBSes became very popular in Taiwan in the 1990s. Students at National Taiwan University (NTU 台大) created PTT, a BBS that people still use today. It has been part of Taiwan’s internet culture for more than 30 years. PTT was very different from the social media apps that students use today, but it gave people a place to chat about almost anything. Early BBSes were mostly text-based. People typed messages instead of sharing photos or GIFs (short, moving images). But these sites had something special: anonymity. You could share your thoughts without telling people your real name. You were not a face or a photo, but only the words you typed. This gave people more freedom to share ideas and news. However, it also made it easier to lie or say terrible things without fear. People could be honest or hurtful, and others might never know who they were. At first, not everyone could use the Internet, and many PTT users were young adults. As more people went online, these communities grew. People could share news quickly and make friends they had never met, even in other countries. Some people spent hours talking to online friends without ever learning their real names or seeing their faces. It was a new way to be social." },
+                { section: "Web 2.0: Photos and Friends", text: "In the mid-2000s, the Internet changed again. This new generation was called Web 2.0. Instead of only reading information, people could easily share pictures, music, and parts of their lives. Social media also became less anonymous. People wanted to show their faces, share their lives, and see who their online friends were. The Internet was becoming a place where you could show others who you were. MySpace was the world’s biggest social media site at the time. People made personal pages and showed off their top eight friends. For some users, being on a friend's list showed how popular they were. In Taiwan, a similar site called Wretch (無名小站) was popular for sharing photos, writing about your life, and talking to friends." },
+                { section: "Facebook and New Platforms", text: "Facebook began in 2004, and at first only college and university students could use it. It later opened to everyone. By 2008, Facebook was bigger than MySpace. Soon, parents, grandparents, and businesses were using it too. Facebook was no longer a small online club for students. It had become a place for almost everyone. But younger people wanted something new. In 2012, Facebook bought Instagram. Today, Facebook (FB), Instagram (IG), and Threads all belong to the same company, Meta. They give different groups of people different ways to share. Facebook is often used for posts about your life and friends. Instagram grew as phone cameras became more common, and Threads is used for short posts and news. You might not use Facebook yourself, but you may use another app owned by the same company. China also has its own very popular apps, including WeChat (微信), Douyin (抖音), Kuaishou (快手), and Weibo (微博). China has a huge number of social media users, but its most popular apps are not always well known in other countries. Douyin is closely connected to TikTok, the short-video app known around the world. When TikTok became popular, many videos were of people dancing or singing. Facebook and Instagram first focused more on showing you your friends. TikTok focuses more on showing you videos it thinks you will like. TikTok tries to find interesting videos for each person, even if the videos come from people they do not know. You can still share videos, comment, and message others, but much of TikTok is about entertainment instead of talking with friends." },
+                { section: "Social Media Today", text: "In 2026, social media comes in many forms. Is YouTube social media? People watch videos there, but they can also leave comments and join communities. YouTube Shorts is similar to TikTok, with many short videos that people can watch one after another. This makes it harder to say which websites are social media and which are only for watching videos. YouTube, TikTok, and Instagram let people go 'live' (直播) and talk to viewers. On sites like Twitch and Bilibili, people can watch gamers and chat with them. Even LINE, which many people use mostly for messages, has social features, such as posts and group chats. Social media is not only about posting pictures of yourself. All these apps show us one thing: people want to connect. Whether we use words, smiley faces :-), photos, or videos, we want to share and make friends. Social media helps us find people who enjoy the same things, even when they live far away. But people can also spread lies or share their anger online. We still need to learn how to treat other people well, even if we only know them through a screen." }
+              ],
+              vocabulary: [
+                { word: "adult", chinese: "成年人", icon: "👨", examples: [ { en: "Many PTT users were young adults.", zh: "許多PTT用戶是年輕的成年人。" } ] },
+                { word: "anonymity", chinese: "匿名性", icon: "🎭", examples: [ { en: "These sites had something special: anonymity.", zh: "這些網站有特別之處：匿名性。" } ] },
+                { word: "common", chinese: "常見的 / 普通的", icon: "⭐", examples: [ { en: "Phone cameras became more common.", zh: "手機相機變得更加常見。" } ] },
+                { word: "community", chinese: "社群 / 社區", icon: "🏘️", examples: [ { en: "People were using the Internet to make communities.", zh: "人們利用網路建立社群。" } ] },
+                { word: "connect", chinese: "連接 / 聯繫", icon: "🔗", examples: [ { en: "People want to connect with friends online.", zh: "人們想在網上與朋友聯繫。" } ] },
+                { word: "culture", chinese: "文化", icon: "🎎", examples: [ { en: "PTT is a big part of Taiwan's internet culture.", zh: "PTT是台灣網路文化很重要的一部分。" } ] },
+                { word: "entertainment", chinese: "娛樂", icon: "🍿", examples: [ { en: "TikTok is mostly about entertainment.", zh: "TikTok主要關於娛樂。" } ] },
+                { word: "feature", chinese: "特色 / 功能", icon: "⚙️", examples: [ { en: "LINE has many social features.", zh: "LINE有許多社交功能。" } ] },
+                { word: "focus", chinese: "專注於 / 著重於", icon: "🔍", examples: [ { en: "TikTok focuses on videos you might like.", zh: "TikTok專注於你可能會喜歡的影片。" } ] },
+                { word: "freedom", chinese: "自由", icon: "🕊️", examples: [ { en: "Anonymity gave people more freedom to share ideas.", zh: "匿名性讓人們有更多自由分享想法。" } ] },
+                { word: "generation", chinese: "世代", icon: "👥", examples: [ { en: "This new generation was called Web 2.0.", zh: "這個新世代被稱為Web 2.0。" } ] },
+                { word: "honest", chinese: "誠實的", icon: "😇", examples: [ { en: "People could be honest without fear.", zh: "人們可以毫不恐懼地誠實表達。" } ] },
+                { word: "hurtful", chinese: "傷人的 / 造成傷害的", icon: "💔", examples: [ { en: "Sometimes people say hurtful things online.", zh: "有時人們會在網路上說傷人的話。" } ] },
+                { word: "message", chinese: "訊息", icon: "💬", examples: [ { en: "They typed messages to each other.", zh: "他們互相打字傳訊息。" } ] },
+                { word: "military", chinese: "軍隊 / 軍事的", icon: "🪖", examples: [ { en: "The early internet was mostly for the military.", zh: "早期的網路主要是給軍隊使用的。" } ] },
+                { word: "online", chinese: "線上的 / 網路上", icon: "🌐", examples: [ { en: "People spend hours talking to online friends.", zh: "人們花好幾個小時和網友聊天。" } ] },
+                { word: "personal", chinese: "個人的", icon: "👤", examples: [ { en: "People made personal pages on MySpace.", zh: "人們在MySpace上製作個人頁面。" } ] },
+                { word: "platform", chinese: "平台", icon: "📱", examples: [ { en: "Facebook is a very popular platform.", zh: "臉書是一個非常受歡迎的平台。" } ] },
+                { word: "popular", chinese: "受歡迎的 / 流行的", icon: "🔥", examples: [ { en: "BBSes became very popular in Taiwan.", zh: "BBS在台灣變得非常受歡迎。" } ] },
+                { word: "protect", chinese: "保護", icon: "🛡️", examples: [ { en: "The military helps protect the country.", zh: "軍隊協助保護國家。" } ] },
+                { word: "researcher", chinese: "研究人員", icon: "🔬", examples: [ { en: "Scientists and researchers used the early internet.", zh: "科學家和研究人員使用早期的網路。" } ] },
+                { word: "screen", chinese: "螢幕", icon: "💻", examples: [ { en: "We only know them through a screen.", zh: "我們只能透過螢幕認識他們。" } ] },
+                { word: "serious", chinese: "嚴肅的 / 認真的", icon: "😐", examples: [ { en: "People started using it for less serious things.", zh: "人們開始將它用於較不嚴肅的事情。" } ] },
+                { word: "share", chinese: "分享", icon: "📤", examples: [ { en: "We want to share parts of our lives.", zh: "我們想要分享生活的一部分。" } ] },
+                { word: "social", chinese: "社交的", icon: "🤝", examples: [ { en: "After all, we are social animals.", zh: "畢竟，我們是社交動物。" } ] },
+                { word: "spread", chinese: "散佈 / 傳播", icon: "📢", examples: [ { en: "People can easily spread lies online.", zh: "人們很容易在網路上散佈謊言。" } ] },
+                { word: "text-based", chinese: "以文字為主的", icon: "📝", examples: [ { en: "Early BBSes were mostly text-based.", zh: "早期的BBS主要以文字為主。" } ] },
+                { word: "viewer", chinese: "觀眾 / 觀看者", icon: "👀", examples: [ { en: "Live streamers talk to their viewers.", zh: "直播主會和他們的觀眾聊天。" } ] }
+              ],
+              questions: [
+                { type: "mc", q: "1. When did the Internet begin?", options: ["1990", "1969", "1995", "2004"], answer: 1 },
+                { type: "mc", q: "2. Which social media platform was created in Taiwan?", options: ["Facebook", "MySpace", "PTT", "Bilibili"], answer: 2 },
+                { type: "mc", q: "3. What is Douyin (抖音) called outside of China?", options: ["Facebook", "WeChat", "TikTok", "Instagram"], answer: 2 },
+                { type: "fill", q: "4. Early e-mail used the __________ symbol to send messages.", answer: "@" }
+              ],
+              unscrambleWords: ["community", "anonymity", "entertainment", "freedom", "social", "message"],
+              sentences: [
+                "People have used the Internet to share information.",
+                "PTT was created by students at National Taiwan University.",
+                "Social media helps us find people who enjoy the same things."
+              ],
+              synonyms: [
+                { word: "connect", synonym: "link" },
+                { word: "popular", synonym: "famous" },
+                { word: "message", synonym: "text" },
+                { word: "adult", synonym: "grown-up" },
+                { word: "share", synonym: "distribute" }
+              ]
+            },
+            {
+              id: "intermediate",
+              title: "Unit 4: Sharing Online - Intermediate",
+              description: "Pending intermediate content update.",
+              image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80",
+              reading: [
+                { section: "Placeholder Section", text: "[PLACEHOLDER FOR THE INTERMEDIATE READING CONTENT]" }
+              ],
+              vocabulary: [],
+              questions: [],
+              unscrambleWords: [],
+              sentences: [],
+              synonyms: []
+            }
+          ]
+        };
+
+        const appContainer = document.getElementById('app-container');
+        let currentLevel = null;
+        let userXP = parseInt(localStorage.getItem('techLabXP')) || 0;
+        
+        let currentReadingIndex = 0; 
+        let currentQuestionIndex = 0;
+        let currentFlashcardIndex = 0;
+        let currentVocabUnscrambleIndex = 0;
+        let currentSentenceIndex = 0;
+        let missionChallengeIndex = 0;
+        let appChallengeIndex = 0;
+        let synonymChallengeIndex = 0;
+        
+        let wordsToFind = [];
+        let activeMissions = [];
+        let activeSpaceApps = [];
+        let activeSynonyms = [];
+
+        function init() {
+            initParticles();
+            updateXP(0);
+            renderHome();
+        }
+
+        function updateXP(amount) {
+            userXP += amount;
+            localStorage.setItem('techLabXP', userXP);
+            document.getElementById('xp-counter').textContent = `✨ ${userXP} Tech Points`;
+        }
+
+        function renderHome() {
+            appContainer.innerHTML = `
+                <div class="card-grid animate-pop">
+                    ${courseData.levels.map(level => `
+                        <div class="level-card" onclick="startLevel('${level.id}')">
+                            <img src="${level.image}" alt="${level.title}" class="level-image">
+                            <h2>${level.title}</h2>
+                            <p style="color: var(--text-muted); line-height: 1.5;">${level.description}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function startLevel(levelId) {
+            currentLevel = courseData.levels.find(l => l.id === levelId);
+            renderMenu();
+        }
+
+        function renderMenu() {
+            appContainer.innerHTML = `
+                <button class="action-btn" style="width:auto; margin-bottom: 1rem;" onclick="renderHome()">← Switch Level</button>
+                <h1 style="text-align:center; font-family:'Playfair Display', serif; color: var(--text-main);">${currentLevel.title.toUpperCase()}</h1>
+                <div class="card-grid animate-pop">
+                    <div class="level-card" onclick="startReading()">
+                        <div style="font-size: 3rem;">📖</div>
+                        <h3>Reading</h3>
+                    </div>
+                    <div class="level-card" onclick="startQuiz()">
+                        <div style="font-size: 3rem;">❓</div>
+                        <h3>Knowledge Check</h3>
+                    </div>
+                    <div class="level-card" onclick="startFlashcards()">
+                        <div style="font-size: 3rem;">🎴</div>
+                        <h3>Vocab Flashcards</h3>
+                    </div>
+                    <div class="level-card" onclick="startVocabUnscramble()">
+                        <div style="font-size: 3rem;">🔀</div>
+                        <h3>Unscramble</h3>
+                    </div>
+                    <div class="level-card" onclick="startSentenceUnscramble()">
+                        <div style="font-size: 3rem;">🧩</div>
+                        <h3>Sentence Builder</h3>
+                    </div>
+                    <div class="level-card" onclick="startSynonymMatch()">
+                         <div style="font-size: 3rem;">🔗</div>
+                         <h3>Synonym Match</h3>
+                    </div>
+                    <div class="level-card" onclick="startMissionChallenge()">
+                         <div style="font-size: 3rem;">📸</div>
+                        <h3>Tech Concepts</h3>
+                    </div>
+                    <div class="level-card" onclick="startAppChallenge()">
+                        <div style="font-size: 3rem;">💡</div>
+                         <h3>Emoji Decode</h3>
+                    </div>
+                </div>
+            `;
+        }
+
+        function startReading() {
+            if(currentLevel.reading.length === 0 || currentLevel.reading[0].text.includes("PLACEHOLDER")) {
+                alert("Content coming soon for this level!");
+                return;
+            }
+            currentReadingIndex = 0; 
+            renderReading();
+        }
+
+        function renderReading() {
+            wordsToFind = currentLevel.vocabulary.map(v => v.word.toLowerCase());
+            const cloudHTML = currentLevel.vocabulary.map(v => 
+                `<span class="cloud-word" id="cloud-${v.word.replace(/\s+/g, '-').toLowerCase()}">${v.word}</span>`
+            ).join('');
+
+            const isFirst = currentReadingIndex === 0;
+            const isLast = currentReadingIndex === currentLevel.reading.length - 1;
+            const currentPassage = currentLevel.reading[currentReadingIndex];
+
+            const interactiveText = currentPassage.text.replace(/([a-zA-Z0-9-]+)/g, '<span class="interactive-word" onclick="checkWord(this)">$1</span>');
+
+            appContainer.innerHTML = `
+                <button class="action-btn" style="width:auto; margin-bottom: 1rem;" onclick="renderMenu()">← Back to Hub</button>
+                <div class="reading-container animate-pop">
+                    <div style="display:flex; justify-content:space-between; color:var(--text-muted); margin-bottom:1rem; font-size: 0.9rem;">
+                        <span>SECTION ${currentReadingIndex + 1} OF ${currentLevel.reading.length}</span>
+                    </div>
+
+                    <h2 style="margin-top:0; color: #fff;">Find & Highlight Key Vocab</h2>
+                    <div class="word-cloud">
+                        ${cloudHTML}
+                    </div>
+                    
+                    <h2 style="color: var(--neon-blue);">❖ ${currentPassage.section}</h2>
+                    <p style="font-size: 1.15rem; line-height: 1.85;">${interactiveText}</p>
+                    <hr>
+                    
+                    <div class="nav-buttons">
+                        <button class="action-btn" style="width:48%;" onclick="navigateReading(-1)" ${isFirst ? 'disabled style="opacity:0.5"' : ''}>Previous</button>
+                        ${isLast ? 
+                            `<button class="action-btn btn-correct" style="width:48%;" onclick="updateXP(25); startQuiz();">Complete Reading (+25 TP)</button>` : 
+                            `<button class="action-btn" style="width:48%;" onclick="navigateReading(1)">Next</button>`
+                        }
+                    </div>
+                </div>
+            `;
+        }
+
+        function navigateReading(direction) {
+            currentReadingIndex += direction;
+            renderReading();
+        }
+
+        function checkWord(element) {
+            const clickedWord = element.innerText.toLowerCase().trim();
+            const matchedVocab = wordsToFind.find(word => {
+                if (word === clickedWord) return true;
+                const phraseWords = word.split(' ');
+                return phraseWords.includes(clickedWord);
+            });
+
+            if (matchedVocab) {
+                element.classList.add('revealed');
+                const cloudEl = document.getElementById(`cloud-${matchedVocab.replace(/\s+/g, '-')}`);
+                if (cloudEl && !cloudEl.classList.contains('found')) {
+                    cloudEl.classList.add('found');
+                    updateXP(5);
+                }
+            } else {
+                element.classList.add('shake');
+                setTimeout(() => element.classList.remove('shake'), 400);
+            }
+        }
+
+        function startQuiz() {
+            if(currentLevel.questions.length === 0) {
+                alert("Quiz coming soon for this level!");
+                return;
+            }
+            currentQuestionIndex = 0;
+            renderQuiz();
+        }
+
+        function renderQuiz() {
+            const qData = currentLevel.questions[currentQuestionIndex];
+            const isLast = currentQuestionIndex === currentLevel.questions.length - 1;
+            const isFirst = currentQuestionIndex === 0;
+            let interactionHTML = '';
+            
+            if (qData.type === 'mc') {
+                interactionHTML = `
+                    <div id="mc-options" style="display:flex; flex-direction:column; gap:10px; margin-top: 1.5rem;">
+                        ${qData.options.map((opt, index) => `
+                            <button class="action-btn" style="text-align: left; text-transform:none; padding:1rem;" 
+                            onclick="checkQuizAnswer(this, ${index}, ${qData.answer}, 'mc')">${opt}</button>
+                        `).join('')}
+                    </div>`;
+            } else if (qData.type === 'fill') {
+                interactionHTML = `
+                    <div style="margin-top: 1.5rem;">
+                        <input type="text" id="fill-input" placeholder="Type answer here..." autocomplete="off">
+                        <button class="action-btn" style="margin-top:1rem;" onclick="checkQuizAnswer(document.getElementById('fill-input'), null, '${qData.answer}', 'fill')">Submit Answer</button>
+                    </div>`;
+            }
+
+            appContainer.innerHTML = `
+                <button class="action-btn" style="width:auto; margin-bottom: 1rem;" onclick="renderMenu()">← Back to Hub</button>
+                <div class="reading-container animate-pop">
+                    <div style="display:flex; justify-content:space-between; color:var(--text-muted); margin-bottom:1rem; font-size: 0.9rem;">
+                        <span>QUESTION ${currentQuestionIndex + 1} OF ${currentLevel.questions.length}</span>
+                    </div>
+                    <p style="font-size: 1.25rem; font-weight: bold; color: var(--text-main); line-height:1.5;">${qData.q}</p>
+                    ${interactionHTML}
+                    
+                    <div class="nav-buttons">
+                        <button class="action-btn" style="width:48%;" onclick="navigateQuiz(-1)" ${isFirst ? 'disabled style="opacity:0.5"' : ''}>Previous</button>
+                        <button class="action-btn" style="width:48%;" onclick="navigateQuiz(1)">${isLast ? 'Finish' : 'Next'}</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkQuizAnswer(element, selectedIndex, correctAnswer, type) {
+            if (type === 'mc') {
+                const allButtons = element.parentElement.querySelectorAll('button');
+                allButtons.forEach(btn => btn.style.pointerEvents = 'none');
+
+                if (selectedIndex === correctAnswer) {
+                    element.classList.add('btn-correct');
+                    updateXP(15);
+                } else {
+                    element.classList.add('btn-wrong');
+                    element.classList.add('shake');
+                    allButtons[correctAnswer].classList.add('btn-correct');
+                }
+            } else if (type === 'fill') {
+                const userAnswer = element.value.trim().toLowerCase();
+                const actualAnswer = correctAnswer.toLowerCase();
+                if (userAnswer.includes(actualAnswer) || actualAnswer.includes(userAnswer)) {
+                    element.style.borderColor = 'var(--neon-green)';
+                    element.style.color = 'var(--neon-green)';
+                    updateXP(15);
+                    alert("Correct!");
+                } else {
+                    element.style.borderColor = 'var(--neon-red)';
+                    element.classList.add('shake');
+                    setTimeout(() => element.classList.remove('shake'), 400);
+                }
+            }
+        }
+
+        function navigateQuiz(direction) {
+            currentQuestionIndex += direction;
+            if (currentQuestionIndex >= currentLevel.questions.length) {
+                alert("Knowledge Check Completed!");
+                renderMenu();
+            } else {
+                renderQuiz();
+            }
+        }
+
+        function startFlashcards() {
+            if(currentLevel.vocabulary.length === 0) {
+                alert("Flashcards coming soon!");
+                return;
+            }
+            currentFlashcardIndex = 0;
+            renderFlashcardUI();
+        }
+
+        function renderFlashcardUI() {
+            const vocab = currentLevel.vocabulary;
+            const currentCard = vocab[currentFlashcardIndex];
+            
+            let examplesHTML = '';
+            if (currentCard.examples && currentCard.examples.length > 0) {
+                examplesHTML = `<div class="flashcard-examples">` + 
+                    currentCard.examples.map(ex => `
+                        <div class="example-item">
+                            <div class="example-en">${ex.en}</div>
+                            <div class="example-zh">${ex.zh}</div>
+                        </div>
+                    `).join('') + `</div>`;
+            }
+
+            appContainer.innerHTML = `
+                <button class="action-btn" style="width:auto; margin-bottom: 1rem;" onclick="renderMenu()">← Back to Hub</button>
+                <div class="reading-container animate-pop" style="text-align:center;">
+                    <h2 style="margin-top:0;">Vocabulary</h2>
+                    <p style="color:var(--text-muted); font-size:0.9rem;">CARD ${currentFlashcardIndex + 1} OF ${vocab.length}</p>
+                    
+                    <div class="flashcard-scene" onclick="flipCard(this)">
+                        <div class="flashcard">
+                            <div class="flashcard-face flashcard-front">
+                                ${currentCard.word}
+                            </div>
+                            <div class="flashcard-face flashcard-back">
+                                <div style="font-size: 2.8rem; margin: 15px 0 5px 0;">${currentCard.icon}</div>
+                                <div style="font-size: 1.5rem; margin-bottom: 10px;">${currentCard.chinese}</div>
+                                ${examplesHTML}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="nav-buttons">
+                        <button class="action-btn" style="width:48%;" onclick="navigateFlashcard(-1)">Previous</button>
+                        <button class="action-btn" style="width:48%;" onclick="navigateFlashcard(1)">Next</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function flipCard(sceneElement) {
+            const card = sceneElement.querySelector('.flashcard');
+            card.classList.toggle('is-flipped');
+        }
+
+        function navigateFlashcard(direction) {
+            const vocab = currentLevel.vocabulary;
+            currentFlashcardIndex += direction;
+            if (currentFlashcardIndex < 0) currentFlashcardIndex = vocab.length - 1;
+            if (currentFlashcardIndex >= vocab.length) currentFlashcardIndex = 0;
+            renderFlashcardUI();
+        }
+
+        function startVocabUnscramble() {
+            if(currentLevel.unscrambleWords.length === 0) {
+                alert("Unscramble coming soon!");
+                return;
+            }
+            currentVocabUnscrambleIndex = 0;
+            renderVocabUnscramble();
+        }
+
+        function scrambleString(str) {
+            let arr = str.split('');
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            let scrambled = arr.join('');
+            if (scrambled === str && str.length > 3) return scrambleString(str);
+            return scrambled;
+        }
+
+        function renderVocabUnscramble() {
+            const wordsList = currentLevel.unscrambleWords;
+            const originalWord = wordsList[currentVocabUnscrambleIndex];
+            const scrambledWord = scrambleString(originalWord);
+            
+            appContainer.innerHTML = `
+                <button class="action-btn" style="width:auto; margin-bottom: 1rem;" onclick="renderMenu()">← Back to Hub</button>
+                <div class="reading-container animate-pop" style="text-align:center;">
+                    <div style="display:flex; justify-content:space-between; color:var(--text-muted); margin-bottom:1rem; font-size:0.9rem;">
+                        <span>WORD ${currentVocabUnscrambleIndex + 1} OF ${wordsList.length}</span>
+                    </div>
+                    <h2 style="margin-top:0;">Unscramble</h2>
+                    
+                    <div style="font-size: 2.5rem; font-weight: bold; letter-spacing: 5px; color: var(--neon-blue); margin: 1.8rem 0; font-family: 'Playfair Display', serif;">
+                        ${scrambledWord.toUpperCase()}
+                    </div>
+                    
+                    <input type="text" id="unscramble-input" placeholder="Type correct word..." autocomplete="off">
+                    
+                    <button class="action-btn" onclick="checkVocabUnscramble('${originalWord}')">Check</button>
+                </div>
+            `;
+        }
+
+        function checkVocabUnscramble(correctWord) {
+            const inputEl = document.getElementById('unscramble-input');
+            const userWord = inputEl.value.trim().toLowerCase();
+            
+            if (userWord === correctWord.toLowerCase()) {
+                inputEl.style.borderColor = 'var(--neon-green)';
+                inputEl.style.color = 'var(--neon-green)';
+                updateXP(15);
+                setTimeout(() => {
+                    currentVocabUnscrambleIndex++;
+                    if (currentVocabUnscrambleIndex >= currentLevel.unscrambleWords.length) {
+                        alert("Great job! (+50 TP)");
+                        updateXP(50);
+                        renderMenu();
+                    } else {
+                        renderVocabUnscramble();
+                    }
+                }, 800);
+            } else {
+                inputEl.style.borderColor = 'var(--neon-red)';
+                inputEl.classList.add('shake');
+                setTimeout(() => inputEl.classList.remove('shake'), 400);
+            }
+        }
+
+        function startSentenceUnscramble() {
+            if(currentLevel.sentences.length === 0) {
+                alert("Sentence Builder coming soon!");
+                return;
+            }
+            currentSentenceIndex = 0;
+            renderSentenceUnscramble();
+        }
+
+        function renderSentenceUnscramble() {
+            const sentencesList = currentLevel.sentences;
+            const sentence = sentencesList[currentSentenceIndex];
+            let words = sentence.split(' ');
+            
+            let scrambledWords = [...words];
+            for (let i = scrambledWords.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [scrambledWords[i], scrambledWords[j]] = [scrambledWords[j], scrambledWords[i]];
+            }
+
+            const wordsHTML = scrambledWords.map((w, i) => 
+                `<div class="draggable-word" id="word-${i}" onclick="moveWordOnClick(this)">${w}</div>`
+            ).join('');
+
+            appContainer.innerHTML = `
+                <button class="action-btn" style="width:auto; margin-bottom: 1rem;" onclick="renderMenu()">← Back to Hub</button>
+                <div class="reading-container animate-pop">
+                    <div style="display:flex; justify-content:space-between; color:var(--text-muted); margin-bottom:1rem; font-size:0.9rem;">
+                        <span>SENTENCE ${currentSentenceIndex + 1} OF ${sentencesList.length}</span>
+                    </div>
+                    <h2 style="margin-top:0;">Build the Sentence</h2>
+                    <p style="color:var(--text-muted);">Click words in order.</p>
+                    
+                    <div id="sentence-answer-zone" class="sentence-dropzone"></div>
+                    <div id="sentence-word-bank" class="word-bank">${wordsHTML}</div>
+                    
+                    <button class="action-btn" onclick="checkSentenceUnscramble('${sentence.replace(/'/g, "\'")}')">Submit</button>
+                </div>
+            `;
+        }
+
+        function moveWordOnClick(element) {
+            const answerZone = document.getElementById('sentence-answer-zone');
+            const wordBank = document.getElementById('sentence-word-bank');
+            
+            if (element.parentNode.id === 'sentence-word-bank') {
+                answerZone.appendChild(element);
+            } else {
+                wordBank.appendChild(element);
+            }
+        }
+
+        function checkSentenceUnscramble(correctSentence) {
+            const answerZone = document.getElementById('sentence-answer-zone');
+            const currentWords = Array.from(answerZone.children).map(el => el.innerText);
+            const userSentence = currentWords.join(' ');
+            
+            if (userSentence === correctSentence) {
+                answerZone.style.borderColor = 'var(--neon-green)';
+                updateXP(25);
+                setTimeout(() => {
+                    currentSentenceIndex++;
+                    if (currentSentenceIndex >= currentLevel.sentences.length) {
+                        alert("Excellent! (+50 TP)");
+                        updateXP(50);
+                        renderMenu();
+                    } else {
+                        renderSentenceUnscramble();
+                    }
+                }, 1000);
+            } else {
+                answerZone.style.borderColor = 'var(--neon-red)';
+                answerZone.classList.add('shake');
+                setTimeout(() => answerZone.classList.remove('shake'), 400);
+            }
+        }
+
+        function startMissionChallenge() {
+            missionChallengeIndex = 0;
+            activeMissions = [...spaceDB].sort(() => 0.5 - Math.random());
+            renderMissionChallenge();
+        }
+
+        function renderMissionChallenge() {
+            if (missionChallengeIndex >= activeMissions.length) {
+                alert("Concept Challenge Complete!");
+                return renderMenu();
+            }
+
+            const currentMission = activeMissions[missionChallengeIndex];
+            
+            let options = [currentMission.name];
+            let pool = ALL_MISSIONS.filter(name => name !== currentMission.name);
+            pool.sort(() => 0.5 - Math.random());
+            options.push(...pool.slice(0, 3));
+            options.sort(() => 0.5 - Math.random()); 
+
+            appContainer.innerHTML = `
+                <button class="action-btn" style="width:auto; margin-bottom: 1rem;" onclick="renderMenu()">← Back to Hub</button>
+                <div class="reading-container animate-pop" style="padding-bottom: 1.5rem; text-align: center;">
+                    <div style="display:flex; justify-content:space-between; color:var(--text-muted); margin-bottom:1rem; font-size:0.9rem;">
+                        <span>CONCEPT ${missionChallengeIndex + 1} OF ${activeMissions.length}</span>
+                    </div>
+
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 0.8rem; border-radius: 2px; margin-bottom: 1.5rem; border-left: 2px solid var(--neon-blue); text-align: center;">
+                        <span style="color: var(--text-main); font-size: 1.1rem; font-weight:bold;">${currentMission.category}</span>
+                    </div>
+
+                    <div id="mission-feedback-zone">
+                        <img src="${currentMission.img}" alt="Concept Image" class="ai-logo-frame">
+                    </div>
+
+                    <h3 style="color: #fff; margin-bottom: 1.2rem;">Identify this concept:</h3>
+
+                    <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        ${options.map(opt => `
+                            <button class="action-btn" style="margin-top: 0; padding: 1.1rem 0.8rem; font-size: 0.95rem; line-height: 1.3;" onclick="checkMissionGuess(this, '${opt}', '${currentMission.name}')">${opt}</button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkMissionGuess(btn, selected, correct) {
+            const allButtons = btn.parentElement.querySelectorAll('button');
+            allButtons.forEach(b => b.style.pointerEvents = 'none');
+
+            if (selected === correct) {
+                btn.classList.add('btn-correct');
+                updateXP(20);
+                setTimeout(() => {
+                    missionChallengeIndex++;
+                    renderMissionChallenge();
+                }, 1000);
+            } else {
+                btn.classList.add('btn-wrong');
+                const feedbackZone = document.getElementById('mission-feedback-zone');
+                feedbackZone.innerHTML = `
+                    <div style="color: var(--neon-red); font-size: 1.3rem; font-weight: bold; margin: 2rem 0; font-family: 'Playfair Display', serif;">
+                        Incorrect! This is ${correct}.
+                    </div>`;
+                setTimeout(() => {
+                    missionChallengeIndex++;
+                    renderMissionChallenge(); 
+                }, 2000);
+            }
+        }
+
+        function startAppChallenge() {
+            appChallengeIndex = 0;
+            activeSpaceApps = [...spaceAppsDB].sort(() => 0.5 - Math.random());
+            renderAppChallenge();
+        }
+
+        function renderAppChallenge() {
+            if (appChallengeIndex >= activeSpaceApps.length) {
+                alert("Emoji Challenge Complete!");
+                return renderMenu();
+            }
+
+            const currentApp = activeSpaceApps[appChallengeIndex];
+            
+            let options = [currentApp.name];
+            let pool = ALL_SPACE_APPS.filter(n => n !== currentApp.name);
+            pool.sort(() => 0.5 - Math.random());
+            options.push(...pool.slice(0, 3));
+            options.sort(() => 0.5 - Math.random()); 
+
+            appContainer.innerHTML = `
+                <button class="action-btn" style="width:auto; margin-bottom: 1rem;" onclick="renderMenu()">← Back to Hub</button>
+                <div class="reading-container animate-pop" style="padding-bottom: 1.5rem; text-align: center;">
+                    <div style="display:flex; justify-content:space-between; color:var(--text-muted); margin-bottom:1rem; font-size:0.9rem;">
+                        <span>EMOJI ${appChallengeIndex + 1} OF ${activeSpaceApps.length}</span>
+                    </div>
+
+                    <div id="app-feedback-zone" style="min-height: 200px; display: flex; align-items: center; justify-content: center; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--neon-blue); border-radius: 2px; margin-bottom: 1.8rem;">
+                        <span style="font-size: 4.5rem; user-select: none;">${currentApp.emoji}</span>
+                    </div>
+
+                    <h3 style="color: #fff; margin-bottom: 1.2rem;">What does this represent?</h3>
+
+                    <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        ${options.map(opt => `
+                            <button class="action-btn" style="margin-top: 0; padding: 1.1rem 0.6rem; font-size: 0.95rem; line-height: 1.3;" onclick="checkAppGuess(this, '${opt}', '${currentApp.name}')">${opt}</button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkAppGuess(btn, selected, correct) {
+            const allButtons = btn.parentElement.querySelectorAll('button');
+            allButtons.forEach(b => b.style.pointerEvents = 'none');
+
+            if (selected === correct) {
+                btn.classList.add('btn-correct');
+                updateXP(20);
+                setTimeout(() => {
+                    appChallengeIndex++;
+                    renderAppChallenge();
+                }, 1000);
+            } else {
+                btn.classList.add('btn-wrong');
+                const feedbackZone = document.getElementById('app-feedback-zone');
+                feedbackZone.innerHTML = `
+                    <span style="display: block; color: var(--neon-red); font-size: 1.2rem; font-weight: bold; margin: 1.5rem 0; font-family: 'Playfair Display', serif;">
+                        Incorrect! Represents: ${correct}.
+                    </span>`;
+                setTimeout(() => {
+                    appChallengeIndex++;
+                    renderAppChallenge(); 
+                }, 2000);
+            }
+        }
+
+        function startSynonymMatch() {
+            if (!currentLevel.synonyms || currentLevel.synonyms.length === 0) {
+                alert("No synonyms available for this level.");
+                return;
+            }
+            synonymChallengeIndex = 0;
+            activeSynonyms = [...currentLevel.synonyms].sort(() => 0.5 - Math.random());
+            renderSynonymMatch();
+        }
+
+        function renderSynonymMatch() {
+            if (synonymChallengeIndex >= activeSynonyms.length) {
+                alert("Synonym Challenge Complete. (+50 TP Bonus)");
+                updateXP(50);
+                return renderMenu();
+            }
+
+            const currentPair = activeSynonyms[synonymChallengeIndex];
+            
+            let options = [currentPair.synonym];
+            let pool = currentLevel.synonyms
+                .map(s => s.synonym)
+                .filter(syn => syn !== currentPair.synonym);
+            
+            pool.sort(() => 0.5 - Math.random());
+            options.push(...pool.slice(0, 3));
+            options.sort(() => 0.5 - Math.random());
+
+            appContainer.innerHTML = `
+                <button class="action-btn" style="width:auto; margin-bottom: 1rem;" onclick="renderMenu()">← Back to Hub</button>
+                <div class="reading-container animate-pop" style="padding-bottom: 1rem; text-align: center;">
+                    <div style="display:flex; justify-content:space-between; color:var(--text-muted); margin-bottom:1rem; font-size:0.9rem;">
+                        <span>SYNONYM ${synonymChallengeIndex + 1} OF ${activeSynonyms.length}</span>
+                    </div>
+
+                    <h2 style="color: #fff; margin-bottom: 0.5rem;">Find the closest synonym for:</h2>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 1.8rem; border-radius: 2px; margin-bottom: 2rem; border: 1px dotted #666; text-align: center;">
+                        <strong style="color: var(--neon-blue); font-family: 'Playfair Display', serif; font-size: 2.2rem; letter-spacing: 2px; text-transform: uppercase;">
+                            ${currentPair.word}
+                        </strong>
+                    </div>
+
+                    <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        ${options.map(opt => `
+                            <button class="action-btn" style="margin-top: 0; padding: 1.2rem; font-size: 1.05rem;" onclick="checkSynonymGuess(this, '${opt}', '${currentPair.synonym}')">${opt}</button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkSynonymGuess(btn, selected, correct) {
+            const allButtons = btn.parentElement.querySelectorAll('button');
+            allButtons.forEach(b => b.style.pointerEvents = 'none');
+
+            if (selected === correct) {
+                btn.classList.add('btn-correct');
+                updateXP(15);
+                setTimeout(() => {
+                    synonymChallengeIndex++;
+                    renderSynonymMatch();
+                }, 1000);
+            } else {
+                btn.classList.add('btn-wrong');
+                btn.classList.add('shake');
+                
+                allButtons.forEach(b => {
+                    if (b.innerText === correct) {
+                        b.classList.add('btn-correct');
+                    }
+                });
+
+                setTimeout(() => {
+                    synonymChallengeIndex++;
+                    renderSynonymMatch(); 
+                }, 2000);
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
